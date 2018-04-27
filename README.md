@@ -19,7 +19,7 @@ Special thanks to **Christoph Schittko**, *Software Development Engineer*, Micro
 
 ## Federation Scenarios
 
-Our goal with this effort was to explore how well Kubefed achieves different federation scenarios, such as:
+Our goal with this effort was to explore how well Kuberenetes federtion achieves the following scenarios.
 
 ### High Avaialability
 
@@ -27,7 +27,9 @@ Our goal with this effort was to explore how well Kubefed achieves different fed
 
 **Observation:** Kubefed is not currently a viable HA solution. While it updates DNS when Kuberetes services are created and deleted, it does not update DNS when a cluster becomes unavailable. For example, when we block access to a remote cluster (or stop all the VMs in that cluster), Kubefed fails to update DNS to reflect that the service is no longer accessible on that cluster. This is possible to fix in Kubernetes/Kubefed, but as of this writing, Kubefed does not provide an HA solution. A true HA solution requires active health monitoring of each public endpoint, as provided by [Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview) and other DNS-based solutions.
 
-**Conclusion:** Kubernetes Federation **Not Recommended** as high availability soluton.
+**Conclusion:** Kubernetes Federation **Not Recommended** as a high availability soluton.
+
+**Recommentation**: Use a DNS traffic management solution (such as Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview)) instead.
 
 ### Simplified Manageability
 
@@ -45,7 +47,9 @@ In addition, the very features that make Kubefed appealing (e.g. enforcing consi
 
 **Conclusion**: While Kubernetes federation works as advertised, we question whether it truly simplifies management, especially compared to the more prescriptive and flexible management achievable using continuous delivery systems. We conclude that Kubernetes federation is **Not Recommended** for our customers as a means of simplfying manageability.
 
-###Avoiding Vendor Lock-In
+**Recommentation**: Use a Continuous Delivery solution instead.
+
+### Avoiding Vendor Lock-In
 
 **Scenario**: Run applications in, or migrate them between, data centers operated by different entities, such as your own private on-premises data center, Azure, AWS and/or GCP.
 
@@ -54,6 +58,8 @@ In addition, the very features that make Kubefed appealing (e.g. enforcing consi
 A key consideration for using Federation is network security, as the federation controller communicates with remote clusters using the standard Kubenetes API. Many enterprises will not permit exposure of a cluster's Kubernetes API via a public IP (although the Kubernetes API is secured via TLS.) In this case, private network peering can be used so that public IPs aren't used. Such a solution would require VPN solutions. 
 
 **Conclusion**: Kubernetes Federation does not appear to make multi-vendor deployments any easier. If your enterprise requires VPN or similar network configuration to secure the cross-cluster communication, federation may make deployments more difficult compared to running CD tools. Net: Kuberentes federation is **Not Recommended** for multi-vendor deployments.
+
+**Recommendation**: Use a continuous delivery (CD) solution to deploy and manage stand-alone clusters in each data center.
 
 ## Federation Topology
 
