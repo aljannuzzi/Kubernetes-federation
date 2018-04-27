@@ -16,7 +16,7 @@ The group got together for some days in Seattle and was composed by:
 **Alessandro Jannuzzi** - *Software Development Engineering Manager*, from Brazil
 
 
-## A quick look on federating Kubenetes clusters
+## A quick look on federating Kubernetes clusters
 
 In a nutshell, you might be interested in federating Kubernetes clusters if you plan to run multi-cloud applications or even multi-datacenter, geo-distributed workloads within a single cloud provider.
 
