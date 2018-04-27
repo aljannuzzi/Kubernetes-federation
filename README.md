@@ -180,7 +180,7 @@ You should replace RELEASE-VERSION with the version of kubernetes you are runnin
 
 In our case, it was 1.8.11. 
 
-**Trick part: attention to the formation, in this case we had to use "v1.8.11" in the URL.** 
+**Tricky part: attention to the formation, in this case we had to use "v1.8.11" in the URL.** 
 
 ```
 root@k8s-master-40902532-0:~# kubectl get nodes
