@@ -52,7 +52,9 @@ In this case we will get the ACS Engine tool and run it directly on the client s
 
 In this example, we're using bash on Windows10, under the fantastic [Linux subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-### Createing the ARM template and provisioning it on Azure
+### Generating the ARM template and provisioning it on Azure
+
+[Azure Resource Manager (ARM) templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates) are files that describe the components to be deployed to Azure. ACS Engine uses a json as an input parameter file, generates the corresponding ARM template and gets it deployed on Azure.
 
 You should download the latest version of the ACS Engine for your platform from [here](https://github.com/Azure/acs-engine/releases/tag/v0.16.0).
 
