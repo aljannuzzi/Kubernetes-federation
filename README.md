@@ -404,7 +404,7 @@ By this time, the DNS zone should be populated with A and CNAME records.
 
 If your DNS is reacheble in the Internet, feel free to call your service by name!
 
-## Conclusion, no... Question to follow up!
+## Conclusion, no... Questions to follow up!
 
 Kubernetes federation is an interesting concept but you should be clear on what you're trying to solve by using it.
 
