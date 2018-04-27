@@ -60,7 +60,7 @@ You should download the latest version of the ACS Engine for your platform from 
 
 After login with "az login" and setting your default subscription (if you have doubts, check [this](https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-set)), let's prepare a json file to be used with ACS Engine.
 
-The parameters of this json file will dictate how your cluster will be provisioned and configured on Azure. I created this one saved as k8.json.
+The parameters of this json file will dictate how your cluster will be provisioned and configured on Azure. We created this one and saved it as k8.json.
 
 ```json
 {
