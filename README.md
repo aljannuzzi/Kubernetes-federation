@@ -151,7 +151,8 @@ After creating the zone, you'll need a Service Principle with access to the DNS 
 
 That's how we created ours.
 
-```az ad sp create-for-rbac -n "http://MyApp" --role contributor --scopes /subscriptions/[your subscription id]/resourceGroups/[your resource group]``` 
+```az ad sp create-for-rbac -n "http://MyApp" --role contributor --scopes /subscriptions/[your subscription id]/resourceGroups/[your resource group]```
+
 In this phase we followed [this awesome hack](https://github.com/xtophs/k8s-setup-federation-cluster) created by our good friend and Kubernetes ninja, [**Christoph Schittko**](https://github.com/xtophs).
 
 To allow kubernetes create records dynamically into the Azure DNS, you'll need to inform this configuration file when creating the federation. So, you should prepare it accordingly.
