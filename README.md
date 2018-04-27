@@ -42,7 +42,7 @@ In this example, we will describe our experience on setting up two Kubernetes cl
 
 ## Creating two Kubernetes clusters
 
-The Kubernetes clusters we will use in this example will be installed through the **Azure Container Services Engine (ACS Engine)**.
+The Kubernetes clusters we will use in this example will be installed through the [**Azure Container Services Engine (ACS Engine)**](https://github.com/Azure/acs-engine).
 
 ACS Engine is a tool to generate a fully customized Azure ARM template, describing all the componentes of the Kubernetes clusters to run on Azure.
 
