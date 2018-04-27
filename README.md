@@ -101,9 +101,9 @@ The parameters of this json file will dictate how your cluster will be provision
 ```
 Based on this file, *westuscuster1* will be our first Kubernetes cluster, with one master and two agents.
 
-There are other parameters that I will not set in this file, but will use directly in the command line of the ACS Engine tool.
+There are other parameters we will not set in this file, but will use directly in the command line of the ACS Engine tool.
 
-I will leave the ```servicePrincipalProfile``` entry empty so the ACS Engine will create it automatically when running.
+We will leave the ```servicePrincipalProfile``` entry empty so the ACS Engine will create it automatically when running.
 
 This *k8.json* file should be informed in the command line for the ACS Engine.
 
