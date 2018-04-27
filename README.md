@@ -13,7 +13,7 @@ The group got together for some days in Seattle and was composed by:
 
 **Michelle Cone** -  *Software Development Engineer*, from USA
 
-**Alessandro Jannuzzi** - *Software Development Engineer Manager*, from Brazil
+**Alessandro Jannuzzi** - *Software Development Engineering Manager*, from Brazil
 
 
 ## A quick look on federating Kubenetes clusters
