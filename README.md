@@ -2,7 +2,9 @@
 
 This document summarizes our learnings from an in-depth exploration of how to set up and configure Kubernetes Cluster Federation on Microsoft Azure using the Kubefed project.
 
-Our goal is to provide instructions on how to set up Cluster Federation on Azure-hosted Kubernetes clusters, while also sharing our learnings and observations about when Cluster Federation may be beneficial. 
+Our goal is to provide instructions on how to set up Cluster Federation on Azure-hosted Kubernetes clusters, while also sharing our learnings and observations about Cluster Federation. 
+
+**Summary:** On balance, we do not recommend using Kubernetes Cluster Federation (Kubefed) in production scenarios.
 
 # About the group who wrote this guide
 
