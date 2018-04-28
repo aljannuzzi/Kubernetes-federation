@@ -1,5 +1,10 @@
-# Kubernetes-federation
-A quick overview on how to federate multiple Kubernetes clusters on Azure
+# Kubernetes Cluster Federation using Kubefed
+
+This document summarizes our learnings from an in-depth exploration of how to set up and configure Kubernetes Cluster Federation on Microsoft Azure using the Kubefed project.
+
+Our goal is to provide instructions on how to set up Cluster Federation on Azure-hosted Kubernetes clusters, while also sharing our learnings and observations about Cluster Federation. 
+
+**Summary:** On balance, we do not recommend using Kubernetes Cluster Federation (Kubefed) in production scenarios.
 
 # About the group who wrote this guide
 
@@ -7,16 +12,81 @@ This text was created as a way to capture the learnings of a hacking among four 
 
 The group got together for some days in Seattle and was composed by:
 
-**Jeff Day** - *Program Manager Architect*, from USA
+- **Alessandro Jannuzzi** - *Software Development Engineering Manager*, Microsoft Brazil
+- **Diego Protta Casati** - *Senior Software Engineer*, Microsoft Canada
+- **Jeff Day** - *Program Manager Architect*, Microsoft USA
+- **Michelle Cone** -  *Software Development Engineer*, Microsoft USA
 
-**Diego Protta Casati** - *Senior Software Engineer*, from Canada
+Special thanks to **Christoph Schittko**, *Software Development Engineer*, Microsoft USA, for his research and assistance with this effort.
 
-**Michelle Cone** -  *Software Development Engineer*, from USA
+## Federation Scenarios
 
-**Alessandro Jannuzzi** - *Software Development Engineering Manager*, from Brazil
+Our goal with this effort was to explore how well Kuberenetes federtion achieves the following scenarios.
 
+### High Avaialability
 
-## A quick look on federating Kubernetes clusters
+**Scenario:** Keep services healthy by automatatically routing traffic away from unhealthy clusters.
+
+**Observation:** Kubefed is not currently a viable HA solution. While it updates DNS when Kuberetes services are created and deleted, it does not update DNS when a cluster becomes unavailable. For example, when we block access to a remote cluster (or stop all the VMs in that cluster), Kubefed fails to update DNS to reflect that the service is no longer accessible on that cluster. This is possible to fix in Kubernetes/Kubefed, but as of this writing, Kubefed does not provide an HA solution. A true HA solution requires active health monitoring of each public endpoint, as provided by [Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview) and other DNS-based solutions.
+
+**Conclusion:** Kubernetes Federation **Not Recommended** as a high availability soluton.
+
+**Recommentation**: Use a DNS traffic management solution (such as Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview)) instead.
+
+### Simplified Manageability
+
+**Scenario:** Reduce management overhead and ensure consistency by managing all clusters from within a single Kubectl context. (We think of this as managing multiple clusters via a "single pane of glass.")
+
+**Observation:** We found Kubernetes an effective and reliable method for updating multiple clusters via a single ```kubectl``` command.
+
+On the other hand, Kubefed itself must be configured and managed, which increases overall complexity of the deployment.
+
+We also learned that Kubefed automatically removes any customizations made directly on individual clusters. For example if you delete a pod on just one cluster, Kubefed will automatically restart it. This behavior assures that all clusters are kept in sync according to the configuration defined in the federated namespace.
+
+From our perspective, it's an open question whether Kubernetes federation is really a simpler, more reliable way to manage production deployments. There are a variety of continuous delivery (CD) solutions that can be used to automate K8s deployments, and it's easy to configure deployments to multiple clusters. While you can certainly use a CD solution to deploy to federated clusters, you have to set up and maintain the federation configuration, which increases the overall complexity of your infrastructure. 
+
+In addition, the very features that make Kubefed appealing (e.g. enforcing consistent configuration across clusters) can get in the way if you want to tweak the configuration of one of your clusters during a rolling upgrade, troubleshooting, etc.
+
+**Conclusion**: While Kubernetes federation works as advertised, we question whether it truly simplifies management, especially compared to the more prescriptive and flexible management achievable using continuous delivery systems. We conclude that Kubernetes federation is **Not Recommended** for our customers as a means of simplfying manageability.
+
+**Recommentation**: Use a Continuous Delivery solution instead.
+
+### Avoiding Vendor Lock-In
+
+**Scenario**: Run applications in, or migrate them between, data centers operated by different entities, such as your own private on-premises data center, Azure, AWS and/or GCP.
+
+**Observation**: While we didn't create Kubernetes clusters in AWS or GCP, we see no obstacle to have done so. A key point, however, is that Kubernetes Federation is in no way required to run clusters in different vendors.
+
+A key consideration for using Federation is network security, as the federation controller communicates with remote clusters using the standard Kubenetes API. Many enterprises will not permit exposure of a cluster's Kubernetes API via a public IP (although the Kubernetes API is secured via TLS.) In this case, private network peering can be used so that public IPs aren't used. Such a solution would require VPN solutions. 
+
+**Conclusion**: Kubernetes Federation does not appear to make multi-vendor deployments any easier. If your enterprise requires VPN or similar network configuration to secure the cross-cluster communication, federation may make deployments more difficult compared to running CD tools. Net: Kuberentes federation is **Not Recommended** for multi-vendor deployments.
+
+**Recommendation**: Use a continuous delivery (CD) solution to deploy and manage stand-alone clusters in each data center.
+
+## Federation Topology
+
+Understanding the topology created by Kubefed is key to understanding the solution.
+
+![Federation Diagram](K8sClusterFederation.png) 
+
+### Cluster Topology
+
+The diagram shows Kubernetes clusters running in two different Azure Data Centers, but Kubefed can be used to federate 2-n clusters running in any location. For example, the following cluster topologies will work:
+
+- Two clusters in one data center
+- Clusters in different kinds of data centers, such as any combintation of on-premises (private), Azure, AWS, and/or GCP data centers
+
+### Federation-System Namespace
+
+The ```kubefed init``` command installs the Kubefed control plane software in the Federation-System namespace on one of your clusters. When you issue Kubectl commands, such as ```kubectl apply``` or ```kubefed edit```, in this namespace the control plane issues the commands to all clusters participating in the federation.
+
+### DNS Control
+
+Kubefed updates DNS to reflect all public endpoints defined in Kubernetes servces defined within the federated clusters. 
+
+As of this writing, Kubefed does not support Azure DNS, so we used a [custom version](https://github.com/kubernetes/kubernetes/pull/51026) that does so. 
+
+## Getting Started with Kubernetes Federation
 
 In a nutshell, you might be interested in federating Kubernetes clusters if you plan to run multi-cloud applications or even multi-datacenter, geo-distributed workloads within a single cloud provider.
 
@@ -416,7 +486,7 @@ We think it is important to ask questions like:
 * What if I use external DNS load balancers such as [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/) to load balance bewteen multiple clusters?
 * How would I benefit from having a single control place to manage the jointed clusters under the federation versus the effort of dealing with one more abstraction?
 
-These are all valid questions to better define the scope of implementing federation with kubernetes.
+These are all valid questions to better define the scope of implementing federation with Kubernetes.
 
 But this hack was more an exploration of the possibilities. In this aspect, we are much more clear now on how to do it using ACS Engine on Microsoft Azure. 
 
